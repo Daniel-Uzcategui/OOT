@@ -599,16 +599,16 @@ void CheckTrackerItemReceive(GetItemEntry giEntry) {
         } else if (giEntry.itemId == ITEM_SONG_PRELUDE) {
             SetCheckCollected(RC_SHEIK_AT_TEMPLE);
             return;
-        } else if (giEntry.itemId == ITEM_BRACELET) {
+        } else if (giEntry.itemId == ITEM_STRENGTH_GORONS_BRACELET) {
             SetCheckCollected(RC_GC_DARUNIAS_JOY);
             return;
-        } else if (giEntry.itemId == ITEM_LETTER_ZELDA) {
+        } else if (giEntry.itemId == ITEM_ZELDAS_LETTER) {
             SetCheckCollected(RC_HC_ZELDAS_LETTER);
             return;
         } else if (giEntry.itemId == ITEM_WEIRD_EGG) {
             SetCheckCollected(RC_HC_MALON_EGG);
             return;
-        } else if (giEntry.itemId == ITEM_BEAN) {
+        } else if (giEntry.itemId == ITEM_MAGIC_BEAN) {
             SetCheckCollected(RC_ZR_MAGIC_BEAN_SALESMAN);
             return;
         }

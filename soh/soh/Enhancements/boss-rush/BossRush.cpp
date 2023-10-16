@@ -351,10 +351,10 @@ void BossRush_InitSave() {
 
     // Set items
     std::array<u8, 24> brItems = {
-        ITEM_STICK,     ITEM_NUT,  ITEM_BOMB, ITEM_BOW,      ITEM_NONE,        ITEM_NONE,
-        ITEM_SLINGSHOT, ITEM_NONE, ITEM_NONE, ITEM_HOOKSHOT, ITEM_NONE,        ITEM_NONE,
-        ITEM_BOOMERANG, ITEM_LENS, ITEM_NONE, ITEM_HAMMER,   ITEM_ARROW_LIGHT, ITEM_NONE,
-        ITEM_NONE,      ITEM_NONE, ITEM_NONE, ITEM_NONE,     ITEM_NONE,        ITEM_NONE,
+        ITEM_DEKU_STICK, ITEM_DEKU_NUT,      ITEM_BOMB, ITEM_BOW,      ITEM_NONE,        ITEM_NONE,
+        ITEM_SLINGSHOT,  ITEM_NONE,          ITEM_NONE, ITEM_HOOKSHOT, ITEM_NONE,        ITEM_NONE,
+        ITEM_BOOMERANG,  ITEM_LENS_OF_TRUTH, ITEM_NONE, ITEM_HAMMER,   ITEM_ARROW_LIGHT, ITEM_NONE,
+        ITEM_NONE,       ITEM_NONE,          ITEM_NONE, ITEM_NONE,     ITEM_NONE,        ITEM_NONE,
     };
 
     if (gSaveContext.bossRushOptions[BR_OPTIONS_LONGSHOT] == BR_CHOICE_LONGSHOT_YES) {
@@ -363,26 +363,26 @@ void BossRush_InitSave() {
 
     switch (gSaveContext.bossRushOptions[BR_OPTIONS_BOTTLE]) {
         case BR_CHOICE_BOTTLE_EMPTY:
-            brItems[18] = ITEM_BOTTLE;
+            brItems[18] = ITEM_BOTTLE_EMPTY;
             break;
         case BR_CHOICE_BOTTLE_FAIRY:
-            brItems[18] = ITEM_FAIRY;
+            brItems[18] = ITEM_BOTTLE_FAIRY;
             break;
         case BR_CHOICE_BOTTLE_REDPOTION:
-            brItems[18] = ITEM_POTION_RED;
+            brItems[18] = ITEM_BOTTLE_POTION_RED;
             break;
         case BR_CHOICE_BOTTLE_GREENPOTION:
-            brItems[18] = ITEM_POTION_GREEN;
+            brItems[18] = ITEM_BOTTLE_POTION_GREEN;
             break;
         case BR_CHOICE_BOTTLE_BLUEPOTION:
-            brItems[18] = ITEM_POTION_BLUE;
+            brItems[18] = ITEM_BOTTLE_POTION_BLUE;
             break;
         default:
             break;
     }
 
     if (gSaveContext.bossRushOptions[BR_OPTIONS_BUNNYHOOD] == BR_CHOICE_BUNNYHOOD_YES) {
-        brItems[23] = ITEM_MASK_BUNNY;
+        brItems[23] = ITEM_MASK_BUNNY_HOOD;
     }
 
     for (int item = 0; item < ARRAY_COUNT(gSaveContext.inventory.items); item++) {
@@ -424,8 +424,8 @@ void BossRush_InitSave() {
     Inventory_ChangeUpgrade(UPG_QUIVER, upgradeLevel);
     Inventory_ChangeUpgrade(UPG_BOMB_BAG, upgradeLevel);
     Inventory_ChangeUpgrade(UPG_BULLET_BAG, upgradeLevel);
-    Inventory_ChangeUpgrade(UPG_STICKS, upgradeLevel);
-    Inventory_ChangeUpgrade(UPG_NUTS, upgradeLevel);
+    Inventory_ChangeUpgrade(UPG_DEKU_STICKS, upgradeLevel);
+    Inventory_ChangeUpgrade(UPG_DEKU_NUTS, upgradeLevel);
     Inventory_ChangeUpgrade(UPG_STRENGTH, 1);
 
     // Set flags and Link's age based on chosen settings.
@@ -457,13 +457,13 @@ void BossRush_SetEquipment(uint8_t linkAge) {
     // Set Child Equipment.
     if (linkAge == LINK_AGE_CHILD) {
         brButtonItems = {
-            ITEM_SWORD_KOKIRI, ITEM_STICK, ITEM_NUT, ITEM_BOMB, ITEM_NONE, ITEM_NONE, ITEM_NONE, ITEM_NONE
+            ITEM_SWORD_KOKIRI, ITEM_DEKU_STICK, ITEM_DEKU_NUT, ITEM_BOMB, ITEM_NONE, ITEM_NONE, ITEM_NONE, ITEM_NONE
         };
 
-        brCButtonSlots = { SLOT_STICK, SLOT_NUT, SLOT_BOMB, SLOT_NONE, SLOT_NONE, SLOT_NONE, SLOT_NONE };
+        brCButtonSlots = { SLOT_DEKU_STICK, SLOT_DEKU_NUT, SLOT_BOMB, SLOT_NONE, SLOT_NONE, SLOT_NONE, SLOT_NONE };
 
-        Inventory_ChangeEquipment(EQUIP_SWORD, PLAYER_SWORD_KOKIRI);
-        Inventory_ChangeEquipment(EQUIP_SHIELD, PLAYER_SHIELD_DEKU);
+        Inventory_ChangeEquipment(EQUIP_TYPE_SWORD, PLAYER_SWORD_KOKIRI);
+        Inventory_ChangeEquipment(EQUIP_TYPE_SHIELD, PLAYER_SHIELD_DEKU);
     // Set Adult equipment.
     } else {
         brButtonItems = { ITEM_SWORD_MASTER, ITEM_BOW,  ITEM_HAMMER, ITEM_BOMB,
@@ -471,9 +471,9 @@ void BossRush_SetEquipment(uint8_t linkAge) {
 
         brCButtonSlots = { SLOT_BOW, SLOT_HAMMER, SLOT_BOMB, SLOT_NONE, SLOT_NONE, SLOT_NONE, SLOT_NONE };
 
-        Inventory_ChangeEquipment(EQUIP_SWORD, PLAYER_SWORD_MASTER);
-        Inventory_ChangeEquipment(EQUIP_SHIELD, PLAYER_SHIELD_MIRROR);
-        Inventory_ChangeEquipment(EQUIP_TUNIC, PLAYER_TUNIC_GORON + 1); // Game expects tunic + 1, don't ask me why.
+        Inventory_ChangeEquipment(EQUIP_TYPE_SWORD, PLAYER_SWORD_MASTER);
+        Inventory_ChangeEquipment(EQUIP_TYPE_SHIELD, PLAYER_SHIELD_MIRROR);
+        Inventory_ChangeEquipment(EQUIP_TYPE_TUNIC, PLAYER_TUNIC_GORON + 1); // Game expects tunic + 1, don't ask me why.
     }
 
     // Button Items

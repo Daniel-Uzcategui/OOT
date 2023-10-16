@@ -467,12 +467,12 @@ CrowdControl::Effect* CrowdControl::ParseMessage(char payload[512]) {
         case kEffectRefillSticks:
             effect->giEffect = new GameInteractionEffect::AddOrTakeAmmo();
             effect->giEffect->parameters[0] = receivedParameter;
-            effect->giEffect->parameters[1] = ITEM_STICK;
+            effect->giEffect->parameters[1] = ITEM_DEKU_STICK;
             break;
         case kEffectRefillNuts:
             effect->giEffect = new GameInteractionEffect::AddOrTakeAmmo();
             effect->giEffect->parameters[0] = receivedParameter;
-            effect->giEffect->parameters[1] = ITEM_NUT;
+            effect->giEffect->parameters[1] = ITEM_DEKU_NUT;
             break;
         case kEffectRefillBombs:
             effect->giEffect = new GameInteractionEffect::AddOrTakeAmmo();
@@ -518,12 +518,12 @@ CrowdControl::Effect* CrowdControl::ParseMessage(char payload[512]) {
         case kEffectTakeSticks:
             effect->giEffect = new GameInteractionEffect::AddOrTakeAmmo();
             effect->giEffect->parameters[0] = receivedParameter * -1;
-            effect->giEffect->parameters[1] = ITEM_STICK;
+            effect->giEffect->parameters[1] = ITEM_DEKU_STICK;
             break;
         case kEffectTakeNuts:
             effect->giEffect = new GameInteractionEffect::AddOrTakeAmmo();
             effect->giEffect->parameters[0] = receivedParameter * -1;
-            effect->giEffect->parameters[1] = ITEM_NUT;
+            effect->giEffect->parameters[1] = ITEM_DEKU_NUT;
             break;
         case kEffectTakeBombs:
             effect->giEffect = new GameInteractionEffect::AddOrTakeAmmo();

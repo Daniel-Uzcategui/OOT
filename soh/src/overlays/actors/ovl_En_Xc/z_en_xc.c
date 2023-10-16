@@ -376,7 +376,7 @@ void EnXc_SetupSerenadeAction(EnXc* this, PlayState* play) {
     }
 
     // Player is adult and does not have iron boots and has not learned Serenade
-    if ((!CHECK_OWNED_EQUIP(EQUIP_BOOTS, 1) && !Flags_GetEventChkInf(EVENTCHKINF_LEARNED_SERENADE_OF_WATER)) && LINK_IS_ADULT) {
+    if ((!CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, 1) && !Flags_GetEventChkInf(EVENTCHKINF_LEARNED_SERENADE_OF_WATER)) && LINK_IS_ADULT) {
         this->action = SHEIK_ACTION_SERENADE;
         osSyncPrintf("水のセレナーデ シーク誕生!!!!!!!!!!!!!!!!!!\n");
     } else {
@@ -390,7 +390,7 @@ s32 EnXc_SerenadeCS(EnXc* this, PlayState* play) {
         Player* player = GET_PLAYER(play);
         s32 stateFlags = player->stateFlags1;
 
-        if (((CHECK_OWNED_EQUIP(EQUIP_BOOTS, 1) && !IS_RANDO) ||
+        if (((CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, 1) && !IS_RANDO) ||
              (Flags_GetTreasure(play, 2) && IS_RANDO)) &&
             !Flags_GetEventChkInf(EVENTCHKINF_LEARNED_SERENADE_OF_WATER) && !(stateFlags & 0x20000000) &&
             !Play_InCsMode(play)) {
@@ -2241,13 +2241,13 @@ void EnXc_SetupDialogueAction(EnXc* this, PlayState* play) {
     } else {
          this->actor.flags |= ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY;
         if (IS_RANDO && gPlayState->sceneNum == SCENE_TEMPLE_OF_TIME) {
-            if (!CHECK_DUNGEON_ITEM(DUNGEON_KEY_BOSS, SCENE_GANONS_TOWER)) {
+            if (!CHECK_DUNGEON_ITEM(DUNGEON_BOSS_KEY, SCENE_GANONS_TOWER)) {
                 this->actor.textId = TEXT_SHEIK_NEED_HOOK;
             } else {
                 this->actor.textId = TEXT_SHEIK_HAVE_HOOK;
             }
         } else if (IS_RANDO && gPlayState->sceneNum == SCENE_INSIDE_GANONS_CASTLE) {
-            if (CHECK_OWNED_EQUIP(EQUIP_SWORD, 1) && INV_CONTENT(ITEM_ARROW_LIGHT) == ITEM_ARROW_LIGHT &&
+            if (CHECK_OWNED_EQUIP(EQUIP_TYPE_SWORD, 1) && INV_CONTENT(ITEM_ARROW_LIGHT) == ITEM_ARROW_LIGHT &&
             CUR_CAPACITY(UPG_QUIVER) >= 30 && gSaveContext.isMagicAcquired) {
                 this->actor.textId = TEXT_SHEIK_HAVE_HOOK;
             } else {
