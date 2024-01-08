@@ -198,6 +198,11 @@ typedef enum {
     GI_VB_OVERRIDE_LINK_THE_GORON_DIALOGUE,
     // Opt: *EnGo2
     GI_VB_EN_GO2_RESET_AFTER_GET_ITEM,
+    GI_VB_CONSUME_SMALL_KEY,
+    // Vanilla condition: gSaveContext.inventory.dungeonKeys[gSaveContext.mapIndex] <= 0
+    GI_VB_NOT_HAVE_SMALL_KEY,
+    // Vanilla condition: !Flags_GetSwitch(play, this->actor.params & 0x3F)
+    GI_VB_DOOR_BE_LOCKED,
 
     /*** Play Cutscenes ***/
 
