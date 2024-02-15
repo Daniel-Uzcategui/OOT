@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
 set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
 
+
 project(soh LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 20 CACHE STRING "The C++ standard to use")
 
@@ -10,6 +11,17 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(CMAKE_OBJC_FLAGS "${CMAKE_OBJC_FLAGS} -fobjc-arc")
     set(CMAKE_OBJCXX_FLAGS "${CMAKE_OBJCXX_FLAGS} -fobjc-arc")
 endif()
+if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        CACHE STRING "")
+endif()
+
+if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        CACHE STRING "")
+endif()
+
+find_package(CURL CONFIG REQUIRED)
 
 set (BUILD_UTILS OFF CACHE STRING "no utilities")
 set (BUILD_SHARED_LIBS OFF CACHE STRING "install/link shared instead of static libs")
@@ -668,6 +680,7 @@ endif()
 ################################################################################
 # Dependencies
 ################################################################################
+target_link_libraries(${PROJECT_NAME} PRIVATE CURL::libcurl)
 add_dependencies(${PROJECT_NAME}
     ZAPDUtils
     libultraship

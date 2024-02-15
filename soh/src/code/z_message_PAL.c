@@ -1,7 +1,6 @@
 #include "global.h"
 #include "message_data_static.h"
 #include "vt.h"
-
 #include <string.h>
 
 #include "textures/parameter_static/parameter_static.h"
@@ -10,7 +9,77 @@
 #include "soh/Enhancements/cosmetics/cosmeticsTypes.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/OTRGlobals.h"
+#include <stdio.h>
+#include <string.h>
+#include <curl/curl.h>
 
+typedef struct {
+    char* originalMessage;
+    char* modifiedMessage;
+} MessageData;
+
+struct MemoryStruct {
+  char *memory;
+  size_t size;
+};
+
+static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp) {
+  size_t realsize = size * nmemb;
+  struct MemoryStruct *mem = (struct MemoryStruct *)userp;
+
+  char *ptr = realloc(mem->memory, mem->size + realsize + 1);
+  if(!ptr) {
+    /* out of memory! */
+    printf("not enough memory (realloc returned NULL)\n");
+    return 0;
+  }
+
+  mem->memory = ptr;
+  memcpy(&(mem->memory[mem->size]), contents, realsize);
+  mem->size += realsize;
+  mem->memory[mem->size] = 0;
+
+  return realsize;
+}
+
+char *ModifyMessageThroughAPI(const char *originalMessage) {
+  CURL *curl;
+  CURLcode res;
+  struct MemoryStruct chunk;
+
+  chunk.memory = malloc(1);  /* will be grown as needed by the realloc above */
+  chunk.size = 0;    /* no data at this point */
+
+  curl_global_init(CURL_GLOBAL_DEFAULT);
+  curl = curl_easy_init();
+
+  if(curl) {
+    struct curl_slist *headers = NULL;
+
+    headers = curl_slist_append(headers, "Content-Type: text/plain");
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+    curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:5001/modifyMessage");
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, originalMessage);
+
+    /* send all data to this function  */
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+
+    /* we pass our 'chunk' struct to the callback function */
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+
+    res = curl_easy_perform(curl);
+
+    if(res != CURLE_OK)
+      fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+
+    curl_easy_cleanup(curl);
+  }
+
+  curl_global_cleanup();
+
+  return chunk.memory;
+}
 s16 sTextFade = false; // original name: key_off_flag ?
 
 u8 D_8014B2F4 = 0;
@@ -318,10 +387,29 @@ void Message_FindMessage(PlayState* play, u16 textId) {
             font->msgOffset = messageTableEntry->segment;
             font->msgLength = messageTableEntry->msgSize;
 
+             // Dynamically allocate memory for originalMessage
+            char *originalMessage = (char *)malloc((font->msgLength + 1) * sizeof(char));
+            if (originalMessage == NULL) {
+                // Handle error
+                fprintf(stderr, "Memory allocation failed!\n");
+                return;
+            }
+            // Copy the found message to originalMessage
+            strncpy(originalMessage, foundSeg, font->msgLength);
+            originalMessage[font->msgLength] = '\0';  // Null-terminate the string
+
+            // Send the original message to the API and get the modified message
+            char *modifiedMessage = ModifyMessageThroughAPI(originalMessage);
+
+            // Use the modified message instead of the original message
+            font->msgOffset = modifiedMessage;
+            font->msgLength = strlen(modifiedMessage);
+
             // "Message found!!!"
             osSyncPrintf(" メッセージが,見つかった！！！ = %x  "
                          "(data=%x) (data0=%x) (data1=%x) (data2=%x) (data3=%x)\n",
                          bufferId, font->msgOffset, font->msgLength, foundSeg, seg, nextSeg);
+            free(originalMessage);
             return;
         }
         messageTableEntry++;
@@ -339,7 +427,6 @@ void Message_FindMessage(PlayState* play, u16 textId) {
     font->msgOffset = foundSeg - seg;
     font->msgLength = nextSeg - foundSeg;
 }
-
 void Message_FindCreditsMessage(PlayState* play, u16 textId) {
     const char* foundSeg;
     const char* nextSeg;
